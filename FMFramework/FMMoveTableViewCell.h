@@ -1,14 +1,14 @@
 //
 //  FMMoveTableViewCell.h
-//  FMFramework
+//  stky
 //
-//  Created by Florian Mielke.
-//  Copyright 2012 Florian Mielke. All rights reserved.
-//  
+//  Created by Dave Feldman on 5/15/14.
+//
+//
 
+#import <Foundation/Foundation.h>
 
-@interface FMMoveTableViewCell : UITableViewCell
-
+@protocol FMMoveTableViewCell <NSObject>
+@required
 - (void)prepareForMove;
-
 @end

@@ -7,8 +7,6 @@
 //  
 
 #import "FMMoveTableView.h"
-#import "FMMoveTableViewCell.h"
-
 
 /**
  * We need a little helper to cancel the current touch of the long press gesture recognizer
@@ -328,7 +326,7 @@
 
 - (UIView *)snapShotFromRowAtMovingIndexPath
 {
-    FMMoveTableViewCell *touchedCell = (FMMoveTableViewCell *)[self cellForRowAtIndexPath:self.movingIndexPath];
+    UITableViewCell<FMMoveTableViewCell>* touchedCell = (UITableViewCell<FMMoveTableViewCell> *)[self cellForRowAtIndexPath:self.movingIndexPath];
     touchedCell.selected = NO;
     touchedCell.highlighted = NO;
 

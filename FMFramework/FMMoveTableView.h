@@ -7,7 +7,7 @@
 //  
 
 #import <QuartzCore/QuartzCore.h>
-
+#import "FMMoveTableViewCell.h"
 
 @class FMMoveTableView;
 
