@@ -324,11 +324,34 @@
 
 #pragma mark - Snap shot
 
+- (UIColor*)blendColor:(UIColor*)topColor overColor:(UIColor*)bottomColor {
+    // TODO: This algorithm may not be quite right. See http://en.wikipedia.org/wiki/Alpha_compositing
+    CGFloat r1, g1, b1, a1, r2, g2, b2, a2;
+    [topColor getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+    [bottomColor getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+    
+    CGFloat alpha = a1 + a2 * (1 - a1);
+    CGFloat red = (r1 * a1 + r2 * a2 * 1 - a1) / alpha;
+    CGFloat green = (g1 * a1 + g2 * a2 * 1 - a1) / alpha;
+    CGFloat blue = (b1 * a1 + b2 * a2 * 1 - a1) / alpha;
+    
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
+
 - (UIView *)snapShotFromRowAtMovingIndexPath
 {
     UITableViewCell<FMMoveTableViewCell>* touchedCell = (UITableViewCell<FMMoveTableViewCell> *)[self cellForRowAtIndexPath:self.movingIndexPath];
     touchedCell.selected = NO;
     touchedCell.highlighted = NO;
+    UIColor* originalBackground = nil;
+    if ([touchedCell respondsToSelector:@selector(backgroundColorForDraggedSnapshot)]) {
+        UIColor* dragBackground = [touchedCell backgroundColorForDraggedSnapshot];
+        if (dragBackground) {
+            originalBackground = touchedCell.backgroundColor;
+            touchedCell.backgroundColor = [self blendColor:touchedCell.backgroundColor overColor:dragBackground];
+        }
+    }
 
     UIView *snapShot = [touchedCell snapshotViewAfterScreenUpdates:YES];
     snapShot.frame = touchedCell.frame;
@@ -338,6 +361,10 @@
     snapShot.layer.shadowOffset = CGSizeZero;
     snapShot.layer.shadowPath = [[UIBezierPath bezierPathWithRect:snapShot.layer.bounds] CGPath];
 
+    if (originalBackground) {
+        touchedCell.backgroundColor = originalBackground;
+    }
+    
     [touchedCell prepareForMove];
     
     return snapShot;

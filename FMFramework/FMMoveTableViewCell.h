@@ -11,4 +11,5 @@
 @protocol FMMoveTableViewCell <NSObject>
 @required
 - (void)prepareForMove;
+- (UIColor*)backgroundColorForDraggedSnapshot;
 @end
